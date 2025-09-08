@@ -6,20 +6,20 @@ Backend API cho ứng dụng React Native MyApp sử dụng Node.js, Express và
 
 ## 📋 **MỤC LỤC**
 
-1. [Tính năng](#-tính-năng)
-2. [Cấu trúc thư mục chi tiết](#-cấu-trúc-thư-mục-chi-tiết)
-3. [Hướng dẫn cài đặt](#-hướng-dẫn-cài-đặt)
-4. [Hướng dẫn chạy](#-hướng-dẫn-chạy)
-5. [API Endpoints](#-api-endpoints)
-6. [Database Models](#-database-models)
-7. [Middleware System](#-middleware-system)
-8. [Utilities](#-utilities)
+1. [Tổng quan dự án](#-tổng-quan-dự-án)
+2. [Cấu trúc SCRUM Tasks](#-cấu-trúc-scrum-tasks)
+3. [Cấu trúc thư mục](#-cấu-trúc-thư-mục)
+4. [Hướng dẫn cài đặt](#-hướng-dẫn-cài-đặt)
+5. [Hướng dẫn chạy](#-hướng-dẫn-chạy)
+6. [API Endpoints](#-api-endpoints)
+7. [Database Models](#-database-models)
+8. [Development Workflow](#-development-workflow)
 9. [Technologies](#-technologies)
 10. [Troubleshooting](#-troubleshooting)
 
 ---
 
-## 🎯 **TÍNH NĂNG**
+## 🎯 **TỔNG QUAN DỰ ÁN**
 
 ### **✅ Đã hoàn thành:**
 - **🔐 Authentication System**: Đăng ký, đăng nhập, quản lý profile
@@ -27,62 +27,93 @@ Backend API cho ứng dụng React Native MyApp sử dụng Node.js, Express và
 - **📝 Validation**: Input validation với messages tiếng Việt
 - **⚡ Error Handling**: Xử lý lỗi toàn cục với logging
 - **🔧 Utilities**: Image processing, response helpers, query builders
+- **📁 Modular Structure**: Chia thành 4 controller riêng biệt theo SCRUM tasks
 
-### **🔄 Tương lai (Placeholder):**
-- **📂 Category Management**: CRUD cho danh mục sản phẩm
-- **🛍️ Product Management**: CRUD sản phẩm với search/filter
-- **🖼️ Image Upload**: Tích hợp Cloudinary
-- **🔍 Advanced Search**: Full-text search và filtering
+### **🔄 Đang phát triển (Theo SCRUM Tasks):**
+- **📂 SCRUM-7**: Quản lý danh mục sản phẩm (NN)
+- **🛍️ SCRUM-8**: Quản lý sản phẩm CRUD (SD)
+- **🖼️ SCRUM-9**: Upload ảnh sản phẩm (LC)
+- **🔍 SCRUM-10**: Tìm kiếm và lọc sản phẩm (PT)
 
 ---
 
-## 📁 **CẤU TRÚC THƯ MỤC CHI TIẾT**
+## 📊 **CẤU TRÚC SCRUM TASKS**
+
+### **🎯 TASK 7 - NN: Quản lý danh mục sản phẩm**
+**File:** `src/controllers/categoryManagementController.js`
+- **Mục tiêu:** Để phân loại sản phẩm
+- **Functions:** 8 functions (getAllCategories, createCategory, updateCategory, etc.)
+- **Priority:** Must (2 điểm)
+
+### **🎯 TASK 8 - SD: Quản lý sản phẩm (CRUD)**
+**File:** `src/controllers/productManagementController.js`
+- **Mục tiêu:** Để cập nhật kho hàng
+- **Functions:** 10 functions (getAllProducts, createProduct, updateStock, etc.)
+- **Priority:** Must (2 điểm)
+
+### **🎯 TASK 9 - LC: Upload ảnh sản phẩm**
+**File:** `src/controllers/productImageController.js`
+- **Mục tiêu:** Để minh họa catalogue
+- **Functions:** 9 functions (uploadImages, optimizeImages, setMainImage, etc.)
+- **Priority:** Must (2 điểm)
+
+### **🎯 TASK 10 - PT: Tìm kiếm & lọc sản phẩm**
+**File:** `src/controllers/productSearchController.js`
+- **Mục tiêu:** Để dàng chọn sản phẩm
+- **Functions:** 9 functions (searchProducts, filterProducts, analytics, etc.)
+- **Priority:** Must (2 điểm)
+
+---
+
+## 📁 **CẤU TRÚC THƯ MỤC**
 
 ```
 backend/
-├── 📄 server.js                    # Entry point chính của ứng dụng
+├── 📄 server.js                    # Entry point chính
 ├── 📄 package.json                 # Dependencies và scripts
-├── 📄 package-lock.json            # Lock dependencies versions
 ├── 📄 .gitignore                   # Git ignore rules
-├── 📄 README.md                    # Tài liệu hướng dẫn
-├── 📄 .env                         # Biến môi trường (tạo từ .env.example)
+├── 📄 README.md                    # Tài liệu này
+├── 📄 .env                         # Environment variables (tạo từ env.example)
 │
 ├── 📁 src/                         # Source code chính
 │   │
 │   ├── 📁 config/                  # ⚙️ Cấu hình hệ thống
-│   │   ├── 📄 database.js          # Cấu hình kết nối MongoDB
-│   │   └── 📄 cloudinary.js        # Cấu hình Cloudinary (image storage)
+│   │   ├── 📄 database.js          # Cấu hình MongoDB
+│   │   └── 📄 cloudinary.js        # Cấu hình Cloudinary
 │   │
-│   ├── 📁 controllers/             # 🎛️ Logic xử lý business
-│   │   ├── 📄 authController.js    # Xử lý đăng ký/đăng nhập/profile
-│   │   ├── 📄 categoryController.js # [Placeholder] Quản lý danh mục
-│   │   └── 📄 productController.js # [Placeholder] Quản lý sản phẩm
+│   ├── 📁 controllers/             # 🎛️ Business logic controllers
+│   │   ├── 📄 authController.js           # ✅ Authentication (Hoàn chỉnh)
+│   │   ├── 📄 productController.js        # 🔗 Main controller (Tổng hợp)
+│   │   ├── 📄 categoryManagementController.js  # 🎯 TASK 7 - NN
+│   │   ├── 📄 productManagementController.js   # 🎯 TASK 8 - SD
+│   │   ├── 📄 productImageController.js        # 🎯 TASK 9 - LC
+│   │   └── 📄 productSearchController.js       # 🎯 TASK 10 - PT
 │   │
-│   ├── 📁 middleware/              # 🔧 Middleware xử lý request
-│   │   ├── 📄 auth.js              # Xác thực JWT token
-│   │   ├── 📄 adminAuth.js         # Phân quyền admin
-│   │   ├── 📄 validation.js        # Validation input data
-│   │   ├── 📄 upload.js            # Xử lý file upload
-│   │   └── 📄 errorHandler.js      # Xử lý lỗi toàn cục
+│   ├── 📁 middleware/              # 🔧 Request processing
+│   │   ├── 📄 auth.js              # ✅ JWT authentication
+│   │   ├── 📄 adminAuth.js         # ✅ Admin authorization
+│   │   ├── 📄 validation.js        # ✅ Input validation
+│   │   ├── 📄 upload.js            # ✅ File upload handling
+│   │   └── 📄 errorHandler.js      # ✅ Global error handling
 │   │
 │   ├── 📁 models/                  # 🗄️ Database schemas
-│   │   ├── 📄 User.js              # Schema người dùng (hoàn chỉnh)
-│   │   ├── 📄 Category.js          # [Placeholder] Schema danh mục
-│   │   └── 📄 Product.js           # [Placeholder] Schema sản phẩm
+│   │   ├── 📄 User.js              # ✅ User model (Hoàn chỉnh)
+│   │   ├── 📄 Category.js          # 🔄 Category model (Placeholder)
+│   │   └── 📄 Product.js           # 🔄 Product model (Placeholder)
 │   │
-│   ├── 📁 routes/                  # 🛣️ API routes definition
-│   │   ├── 📄 authRoutes.js        # Routes xác thực (/api/auth/*)
-│   │   ├── 📄 categoryRoutes.js    # [Placeholder] Routes danh mục
-│   │   └── 📄 productRoutes.js     # [Placeholder] Routes sản phẩm
+│   ├── 📁 routes/                  # 🛣️ API routes
+│   │   ├── 📄 authRoutes.js        # ✅ Authentication routes
+│   │   ├── 📄 categoryRoutes.js    # 🔄 Category routes (Placeholder)
+│   │   └── 📄 productRoutes.js     # 🔄 Product routes (Placeholder)
 │   │
-│   └── 📁 utils/                   # 🛠️ Tiện ích và helpers
-│       ├── 📄 imageProcessor.js    # Xử lý ảnh với Sharp
-│       ├── 📄 cloudinaryUpload.js  # Upload ảnh lên Cloudinary
-│       ├── 📄 queryHelpers.js      # Hỗ trợ truy vấn DB (search, filter, pagination)
-│       └── 📄 responseHelper.js    # Chuẩn hóa API responses
+│   └── 📁 utils/                   # 🛠️ Utilities
+│       ├── 📄 responseHelper.js    # ✅ API response standardization
+│       ├── 📄 queryHelpers.js      # ✅ Database query helpers
+│       ├── 📄 imageProcessor.js    # ✅ Image processing with Sharp
+│       └── 📄 cloudinaryUpload.js  # ✅ Cloudinary integration
 │
-├── 📁 uploads/                     # 📂 Thư mục lưu file upload tạm thời
-└── 📁 node_modules/                # 📦 Dependencies (auto-generated)
+├── 📁 uploads/                     # 📂 Temporary file storage
+└── 📁 node_modules/                # 📦 Dependencies
 ```
 
 ---
@@ -91,12 +122,11 @@ backend/
 
 ### **Bước 1: Prerequisites**
 ```bash
-# Cài đặt Node.js (version 16+ khuyến nghị)
-# Download: https://nodejs.org/
-
-# Kiểm tra version
+# Node.js version 16+ khuyến nghị
 node --version
 npm --version
+
+# MongoDB (chọn 1 trong 3 options)
 ```
 
 ### **Bước 2: Cài đặt MongoDB**
@@ -105,19 +135,13 @@ npm --version
 ```bash
 # Windows - Download MongoDB Community Server
 # https://www.mongodb.com/try/download/community
-
-# Hoặc dùng Chocolatey
-choco install mongodb
-
-# Start MongoDB service
 net start MongoDB
 ```
 
 **Option B: MongoDB Atlas (Cloud - Miễn phí)**
 ```bash
-# 1. Đăng ký tại: https://cloud.mongodb.com
-# 2. Tạo cluster miễn phí
-# 3. Lấy connection string
+# Đăng ký tại: https://cloud.mongodb.com
+# Tạo cluster và lấy connection string
 ```
 
 **Option C: Docker**
@@ -125,39 +149,23 @@ net start MongoDB
 docker run -d -p 27017:27017 --name mongodb mongo:latest
 ```
 
-### **Bước 3: Clone và cài đặt project**
+### **Bước 3: Setup Project**
 ```bash
-# Clone project (nếu từ git)
-git clone <repository-url>
+# Di chuyển vào thư mục backend
 cd MyApp/backend
-
-# Hoặc nếu đã có code
-cd F:\MyApp\backend
 
 # Cài đặt dependencies
 npm install
-```
 
-### **Bước 4: Cấu hình Environment**
-```bash
 # Tạo file .env
-echo "# Environment Configuration
-NODE_ENV=development
+echo "NODE_ENV=development
 PORT=5000
-
-# Database - Thay đổi tên database theo ý muốn
 MONGODB_URI=mongodb://localhost:27017/myapp_fresh_2024
-
-# JWT Secret - ĐỔI THÀNH SECRET BẢO MẬT CỦA BẠN
-JWT_SECRET=myapp_super_secret_key_2024_change_this_in_production
+JWT_SECRET=myapp_super_secret_key_2024_change_this
 JWT_EXPIRE=7d
-
-# Cloudinary (for image upload) - Có thể để fake cho development
 CLOUDINARY_CLOUD_NAME=test_cloud
 CLOUDINARY_API_KEY=123456789
 CLOUDINARY_API_SECRET=test_secret
-
-# Upload settings
 MAX_FILE_SIZE=5242880
 ALLOWED_FILE_TYPES=image/jpeg,image/png,image/webp" > .env
 ```
@@ -166,47 +174,27 @@ ALLOWED_FILE_TYPES=image/jpeg,image/png,image/webp" > .env
 
 ## 🏃‍♂️ **HƯỚNG DẪN CHẠY**
 
-### **1. Khởi động MongoDB**
+### **1. Development Mode**
 ```bash
-# Nếu dùng MongoDB local
-net start MongoDB
-
-# Nếu dùng Docker
-docker start mongodb
-
-# Nếu dùng Atlas - không cần làm gì
-```
-
-### **2. Chạy Development Server**
-```bash
-# Option 1: Development mode (auto-restart khi code thay đổi)
+# Auto-restart khi code thay đổi
 npm run dev
-
-# Option 2: Production mode
-npm start
-
-# Option 3: Chạy trực tiếp
-node server.js
 ```
 
-### **3. Kiểm tra Server đã chạy**
+### **2. Production Mode**
+```bash
+npm start
+```
+
+### **3. Test Server**
 ```bash
 # Test health endpoint
 curl http://localhost:5000/health
 
-# Hoặc mở browser: http://localhost:5000/health
+# Expected response:
+# {"status": "OK", "message": "Server đang chạy"}
 ```
 
-**Kết quả mong đợi:**
-```json
-{
-  "status": "OK",
-  "message": "Server đang chạy"
-}
-```
-
-### **4. Kiểm tra Database Connection**
-Khi server khởi động thành công, bạn sẽ thấy:
+### **4. Logs mong đợi:**
 ```
 🔄 Đang kết nối đến MongoDB...
 📍 URI: mongodb://localhost:27017/myapp_fresh_2024
@@ -222,30 +210,69 @@ Server running on port 5000
 
 ### **Base URL:** `http://localhost:5000`
 
-### **🔐 Authentication Endpoints (Hoàn chỉnh)**
-
+### **🔐 Authentication (Hoàn chỉnh)**
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| `POST` | `/api/auth/register` | Đăng ký người dùng mới | Public |
+| `POST` | `/api/auth/register` | Đăng ký người dùng | Public |
 | `POST` | `/api/auth/login` | Đăng nhập | Public |
-| `GET` | `/api/auth/profile` | Lấy thông tin profile | Private |
+| `GET` | `/api/auth/profile` | Lấy profile | Private |
 | `PUT` | `/api/auth/profile` | Cập nhật profile | Private |
 | `PUT` | `/api/auth/change-password` | Đổi mật khẩu | Private |
 | `POST` | `/api/auth/logout` | Đăng xuất | Private |
 
-### **📂 Category Endpoints (Placeholder)**
-- Sẽ được implement trong tương lai
-- Routes đã chuẩn bị tại `/api/categories/*`
-
-### **🛍️ Product Endpoints (Placeholder)**
-- Sẽ được implement trong tương lai  
-- Routes đã chuẩn bị tại `/api/products/*`
-
-### **⚡ System Endpoints**
-
-| Method | Endpoint | Description | Access |
+### **📂 Category Management (TASK 7 - NN)**
+| Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
-| `GET` | `/health` | Kiểm tra server status | Public |
+| `GET` | `/api/categories` | Lấy tất cả danh mục | 🔄 TODO |
+| `GET` | `/api/categories/:id` | Lấy danh mục theo ID | 🔄 TODO |
+| `POST` | `/api/categories` | Tạo danh mục mới | 🔄 TODO |
+| `PUT` | `/api/categories/:id` | Cập nhật danh mục | 🔄 TODO |
+| `DELETE` | `/api/categories/:id` | Xóa danh mục | 🔄 TODO |
+| `GET` | `/api/categories/:id/subcategories` | Lấy danh mục con | 🔄 TODO |
+| `PUT` | `/api/categories/reorder` | Sắp xếp thứ tự | 🔄 TODO |
+| `PUT` | `/api/categories/:id/toggle-status` | Bật/tắt danh mục | 🔄 TODO |
+
+### **🛍️ Product Management (TASK 8 - SD)**
+| Method | Endpoint | Description | Status |
+|--------|----------|-------------|--------|
+| `GET` | `/api/products` | Lấy tất cả sản phẩm | 🔄 TODO |
+| `GET` | `/api/products/:id` | Lấy sản phẩm theo ID | 🔄 TODO |
+| `POST` | `/api/products` | Tạo sản phẩm mới | 🔄 TODO |
+| `PUT` | `/api/products/:id` | Cập nhật sản phẩm | 🔄 TODO |
+| `DELETE` | `/api/products/:id` | Xóa sản phẩm | 🔄 TODO |
+| `PUT` | `/api/products/:id/stock` | Cập nhật kho hàng | 🔄 TODO |
+| `GET` | `/api/products/featured` | Sản phẩm nổi bật | 🔄 TODO |
+| `GET` | `/api/products/category/:id` | Sản phẩm theo danh mục | 🔄 TODO |
+| `POST` | `/api/products/:id/duplicate` | Nhân bản sản phẩm | 🔄 TODO |
+
+### **🖼️ Image Management (TASK 9 - LC)**
+| Method | Endpoint | Description | Status |
+|--------|----------|-------------|--------|
+| `POST` | `/api/products/:id/images` | Upload ảnh sản phẩm | 🔄 TODO |
+| `GET` | `/api/products/:id/images` | Lấy danh sách ảnh | 🔄 TODO |
+| `DELETE` | `/api/products/:id/images/:imageId` | Xóa ảnh | 🔄 TODO |
+| `PUT` | `/api/products/:id/images/:imageId` | Cập nhật ảnh | 🔄 TODO |
+| `PUT` | `/api/products/:id/images/reorder` | Sắp xếp ảnh | 🔄 TODO |
+| `PUT` | `/api/products/:id/images/:imageId/set-main` | Đặt ảnh chính | 🔄 TODO |
+| `POST` | `/api/products/:id/images/bulk-upload` | Upload từ URLs | 🔄 TODO |
+| `POST` | `/api/products/:id/images/optimize` | Optimize ảnh | 🔄 TODO |
+
+### **🔍 Search & Filter (TASK 10 - PT)**
+| Method | Endpoint | Description | Status |
+|--------|----------|-------------|--------|
+| `GET` | `/api/products/search` | Tìm kiếm sản phẩm | 🔄 TODO |
+| `POST` | `/api/products/filter` | Lọc sản phẩm | 🔄 TODO |
+| `GET` | `/api/products/search/suggestions` | Gợi ý tìm kiếm | 🔄 TODO |
+| `GET` | `/api/products/:id/similar` | Sản phẩm tương tự | 🔄 TODO |
+| `GET` | `/api/products/trending` | Sản phẩm trending | 🔄 TODO |
+| `GET` | `/api/products/search/analytics` | Analytics tìm kiếm | 🔄 TODO |
+| `POST` | `/api/products/search/track` | Tracking search | 🔄 TODO |
+| `POST` | `/api/products/faceted-search` | Faceted search | 🔄 TODO |
+
+### **⚡ System**
+| Method | Endpoint | Description | Status |
+|--------|----------|-------------|--------|
+| `GET` | `/health` | Health check | ✅ Ready |
 
 ---
 
@@ -257,7 +284,7 @@ Server running on port 5000
   _id: ObjectId,
   username: String,      // Unique, 3-30 chars
   email: String,         // Unique, valid email
-  password: String,      // Hashed với bcrypt
+  password: String,      // Hashed với bcryptjs
   firstName: String,     // Họ
   lastName: String,      // Tên
   phoneNumber: String,   // Optional
@@ -265,141 +292,129 @@ Server running on port 5000
   role: String,          // 'user' | 'admin'
   isActive: Boolean,     // Trạng thái tài khoản
   lastLogin: Date,       // Lần đăng nhập cuối
-  createdAt: Date,       // Ngày tạo
-  updatedAt: Date        // Ngày cập nhật
+  createdAt: Date,       // Auto timestamps
+  updatedAt: Date        // Auto timestamps
 }
 ```
 
-**Features:**
-- ✅ Auto hash password trước khi lưu
-- ✅ Method `comparePassword()` để xác thực
-- ✅ Loại bỏ password khỏi JSON response
-- ✅ Validation messages tiếng Việt
-
-### **📂 Category Model (Placeholder)**
+### **📂 Category Model (TODO - TASK 7)**
 ```javascript
-// Sẽ implement với structure:
+// Sẽ được implement bởi NN
 {
   _id: ObjectId,
-  name: String,
-  description: String,
-  slug: String,
-  image: String,
-  parentCategory: ObjectId,  // Hỗ trợ subcategory
-  isActive: Boolean,
-  sortOrder: Number,
-  createdBy: ObjectId,
+  name: String,           // Tên danh mục
+  description: String,    // Mô tả
+  slug: String,          // URL slug
+  image: String,         // URL ảnh danh mục
+  parentCategory: ObjectId, // Danh mục cha (cho subcategory)
+  isActive: Boolean,     // Trạng thái
+  sortOrder: Number,     // Thứ tự sắp xếp
+  createdBy: ObjectId,   // Người tạo
   createdAt: Date,
   updatedAt: Date
 }
 ```
 
-### **🛍️ Product Model (Placeholder)**
+### **🛍️ Product Model (TODO - TASK 8)**
 ```javascript
-// Sẽ implement với structure phức tạp:
+// Sẽ được implement bởi SD
 {
   _id: ObjectId,
-  name: String,
-  description: String,
-  sku: String,
-  price: Number,
-  category: ObjectId,
-  images: [Object],
-  stock: Object,
-  attributes: [Object],
-  tags: [String],
-  rating: Object,
-  // ... và nhiều fields khác
+  name: String,          // Tên sản phẩm
+  description: String,   // Mô tả chi tiết
+  sku: String,          // Mã sản phẩm (unique)
+  price: Number,        // Giá bán
+  category: ObjectId,   // Danh mục chính
+  subcategory: ObjectId, // Danh mục con
+  images: [Object],     // Mảng ảnh sản phẩm
+  stock: {              // Quản lý kho
+    quantity: Number,
+    lowStockThreshold: Number,
+    trackStock: Boolean
+  },
+  attributes: [Object], // Thuộc tính (size, color, etc.)
+  tags: [String],       // Tags cho search
+  isActive: Boolean,    // Trạng thái
+  isFeatured: Boolean,  // Sản phẩm nổi bật
+  rating: {             // Đánh giá
+    average: Number,
+    count: Number
+  },
+  views: Number,        // Lượt xem
+  sales: Number,        // Lượt bán
+  createdBy: ObjectId,  // Người tạo
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
 ---
 
-## 🛡️ **MIDDLEWARE SYSTEM**
+## 👥 **DEVELOPMENT WORKFLOW**
 
-### **🔐 Authentication Flow**
-```
-Request → auth.js → verify JWT → get User → Controller
-```
+### **🎯 Phân công theo SCRUM Tasks**
 
-**Files:**
-- `auth.js`: Xác thực JWT token
-- `adminAuth.js`: Kiểm tra quyền admin (phải chạy sau auth.js)
-
-### **✅ Validation System**
-```
-Request → validation.js → express-validator → Controller
+#### **NN - TASK 7 (Category Management)**
+```bash
+# Branch: feature/task-7-category-management
+File: src/controllers/categoryManagementController.js
+Focus: Database schema design, hierarchical data
+Estimate: 3-5 days
 ```
 
-**Features:**
-- Validation rules cho register/login
-- Messages lỗi bằng tiếng Việt
-- Support cho categories/products (tương lai)
-
-### **📁 File Upload System**
-```
-Request → upload.js → multer → local storage → imageProcessor.js → Cloudinary
+#### **SD - TASK 8 (Product Management)**
+```bash
+# Branch: feature/task-8-product-management  
+File: src/controllers/productManagementController.js
+Focus: Complex business logic, CRUD operations
+Estimate: 5-7 days
 ```
 
-**Features:**
-- Chỉ accept image files
-- Size limit 5MB
-- Auto rename files
-- Error handling
-
-### **🚨 Error Handling**
-```
-Any Error → errorHandler.js → Standardized Response
+#### **LC - TASK 9 (Image Management)**
+```bash
+# Branch: feature/task-9-image-upload
+File: src/controllers/productImageController.js
+Focus: File processing, Cloudinary integration
+Estimate: 4-6 days
 ```
 
-**Xử lý:**
-- Mongoose errors (validation, duplicate, cast)
-- JWT errors (invalid, expired)
-- Custom application errors
-- Generic server errors
-
----
-
-## 🛠️ **UTILITIES**
-
-### **🖼️ Image Processing (`imageProcessor.js`)**
-```javascript
-// Functions:
-- processImage()           // Resize & optimize
-- createResponsiveImages() // Multiple sizes
-- deleteFile()            // Cleanup
-- getImageMetadata()      // Info extraction
+#### **PT - TASK 10 (Search & Filter)**
+```bash
+# Branch: feature/task-10-search-filter
+File: src/controllers/productSearchController.js
+Focus: Search algorithms, MongoDB aggregation
+Estimate: 6-8 days
 ```
 
-### **☁️ Cloudinary Integration (`cloudinaryUpload.js`)**
-```javascript
-// Functions:
-- uploadToCloudinary()         // Single upload
-- uploadMultipleToCloudinary() // Batch upload
-- deleteFromCloudinary()       // Delete image
-- getTransformedUrl()          // Get optimized URLs
-```
+### **📋 Development Process**
 
-### **🔍 Query Helpers (`queryHelpers.js`)**
-```javascript
-// QueryHelper class:
-- search()     // Full-text search
-- filter()     // Advanced filtering
-- sort()       // Multi-field sorting
-- paginate()   // Pagination với metadata
-- populate()   // Relationship loading
-```
+1. **Setup Branch**
+   ```bash
+   git checkout -b feature/task-X-name
+   ```
 
-### **📤 Response Helpers (`responseHelper.js`)**
-```javascript
-// Standardized responses:
-- success()           // 200 responses
-- created()           // 201 responses
-- error()             // 4xx errors
-- serverError()       // 5xx errors
-- validationError()   // Validation failures
-// ... và nhiều helpers khác
-```
+2. **Implement Functions**
+   - Mỗi developer làm riêng file controller của mình
+   - Follow TODO comments trong file
+   - Implement business logic
+
+3. **Testing**
+   ```bash
+   # Test riêng functions của mình
+   npm test -- --grep "TASK-X"
+   ```
+
+4. **Integration**
+   - Tất cả functions tự động available trong `productController.js`
+   - Main controller import từ các controller con
+   - No conflict giữa các tasks
+
+5. **Merge Strategy**
+   ```bash
+   # Merge từng task khi hoàn thành
+   git checkout main
+   git merge feature/task-X-name
+   ```
 
 ---
 
@@ -412,7 +427,7 @@ Any Error → errorHandler.js → Standardized Response
 - **Mongoose** `v7+` - MongoDB ODM
 
 ### **🔐 Authentication & Security**
-- **jsonwebtoken** - JWT token generation/verification
+- **jsonwebtoken** - JWT token handling
 - **bcryptjs** - Password hashing
 - **helmet** - Security headers
 - **cors** - Cross-origin resource sharing
@@ -427,20 +442,20 @@ Any Error → errorHandler.js → Standardized Response
 ### **🔧 Development Tools**
 - **nodemon** - Auto-restart server
 - **dotenv** - Environment variables
-- **jest** - Testing framework (sẵn sàng)
+- **jest** - Testing framework (ready)
 
 ---
 
 ## 🧪 **TESTING**
 
-### **Test API với cURL**
+### **Test Authentication**
 ```bash
 # Test đăng ký
 curl -X POST http://localhost:5000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "username": "testuser",
-    "email": "test@example.com", 
+    "email": "test@example.com",
     "password": "Test123456",
     "firstName": "Test",
     "lastName": "User"
@@ -453,102 +468,78 @@ curl -X POST http://localhost:5000/api/auth/login \
     "email": "test@example.com",
     "password": "Test123456"
   }'
-
-# Test profile (thay YOUR_TOKEN)
-curl -X GET http://localhost:5000/api/auth/profile \
-  -H "Authorization: Bearer YOUR_TOKEN"
 ```
 
-### **Test với Postman/Thunder Client**
-1. Import collection từ API documentation
-2. Set base URL: `http://localhost:5000`
-3. Test từng endpoint theo thứ tự
+### **Test Health Check**
+```bash
+curl http://localhost:5000/health
+# Response: {"status": "OK", "message": "Server đang chạy"}
+```
 
 ---
 
 ## 🚨 **TROUBLESHOOTING**
 
-### **❌ Lỗi: Cannot find module 'mongoose'**
+### **❌ Lỗi: Cannot find module**
 ```bash
 npm install
 ```
 
 ### **❌ Lỗi: MONGODB_URI is undefined**
 ```bash
-# Kiểm tra file .env có tồn tại không
-ls -la .env
-
-# Tạo file .env nếu chưa có
-cp .env.example .env
+# Tạo file .env với MONGODB_URI
+echo "MONGODB_URI=mongodb://localhost:27017/myapp_fresh_2024" >> .env
 ```
 
-### **❌ Lỗi: ECONNREFUSED 127.0.0.1:27017**
+### **❌ Lỗi: ECONNREFUSED MongoDB**
 ```bash
-# Kiểm tra MongoDB đang chạy
+# Khởi động MongoDB
 net start MongoDB
 
 # Hoặc dùng Docker
 docker run -d -p 27017:27017 mongo
-
-# Hoặc dùng MongoDB Atlas
 ```
 
-### **❌ Lỗi: EADDRINUSE :::5000**
+### **❌ Lỗi: Port 5000 đã sử dụng**
 ```bash
-# Port 5000 đã được sử dụng
-# Windows:
+# Tìm và kill process
 netstat -ano | findstr :5000
 taskkill /PID <PID> /F
 
-# Hoặc đổi port trong .env
-PORT=5001
+# Hoặc đổi port
+echo "PORT=5001" >> .env
 ```
 
-### **❌ Lỗi: JWT must be provided**
+### **❌ Lỗi: JWT Secret**
 ```bash
-# Đảm bảo JWT_SECRET trong .env không trống
-JWT_SECRET=your_actual_secret_key_here
+# Đảm bảo JWT_SECRET không trống
+echo "JWT_SECRET=your_actual_secret_key" >> .env
 ```
 
 ---
 
-## 📞 **SUPPORT**
+## 📞 **SUPPORT & NEXT STEPS**
 
-Nếu gặp vấn đề:
+### **🔄 Current Status:**
+- ✅ Authentication system hoàn chỉnh
+- ✅ Modular structure sẵn sàng
+- ✅ 4 controller files với function signatures
+- 🔄 Đang chờ implementation từ team
 
-1. **Kiểm tra Prerequisites**: Node.js, MongoDB
-2. **Kiểm tra file .env**: Đảm bảo có đầy đủ variables
-3. **Kiểm tra logs**: Server console output
-4. **Test từng bước**: Health check → Register → Login
-5. **Kiểm tra database**: MongoDB Compass hoặc shell
+### **📋 Next Milestones:**
+1. **Week 1**: NN hoàn thành Category Management
+2. **Week 1-2**: SD hoàn thành Product Management  
+3. **Week 2**: LC hoàn thành Image Upload
+4. **Week 2-3**: PT hoàn thành Search & Filter
+5. **Week 3**: Integration testing & deployment
 
----
-
-## 🔄 **DEVELOPMENT ROADMAP**
-
-### **Phase 1: Authentication ✅**
-- [x] User registration/login
-- [x] JWT authentication  
-- [x] Profile management
-- [x] Security middleware
-
-### **Phase 2: Category Management (Coming)**
-- [ ] Category CRUD operations
-- [ ] Subcategory support
-- [ ] Category image upload
-
-### **Phase 3: Product Management (Coming)**
-- [ ] Product CRUD operations
-- [ ] Multiple image upload
-- [ ] Inventory management
-- [ ] Search & filtering
-
-### **Phase 4: Advanced Features (Future)**
-- [ ] Real-time notifications
-- [ ] Advanced analytics
-- [ ] Performance optimization
-- [ ] API documentation (Swagger)
+### **📚 Documentation:**
+- Mỗi developer đọc file controller tương ứng
+- Follow TODO comments để implement
+- Test API với Postman/cURL
 
 ---
 
-**🎉 Backend đã sẵn sàng cho React Native frontend integration!**
+**🎉 Backend structure sẵn sàng cho parallel development!**
+
+**👥 Team có thể bắt đầu implement ngay từ bây giờ!**
