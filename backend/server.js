@@ -15,6 +15,7 @@ const productRoutes = require('./src/routes/productRoutes');
 const errorHandler = require('./src/middleware/errorHandler');
 const addressRoutes = require('./src/routes/addressRoutes');
 const reportRoutes = require('./src/routes/reportRoutes');
+const paymentRoutes = require('./src/routes/paymentRoutes');
 const cartRoutes = require('./src/routes/cartRoutes');
 const orderRoutes = require('./src/routes/orderRoutes');
 
@@ -62,6 +63,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/addresses', addressRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/payments', paymentRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 
