@@ -1,4 +1,4 @@
-// SCRUM-7: Controller quản lý danh mục sản phẩm - NN
+// SCRUM-7: Controller quản lý danh mục sản phẩm (BASIC ONLY)
 const Category = require('../models/Category');
 const Product = require('../models/Product');
 const { validationResult } = require('express-validator');
@@ -58,20 +58,7 @@ const getAllCategories = async (req, res) => {
     }
 };
 
-/**
- * @desc    Lấy cây danh mục (tree structure)
- * @route   GET /api/products/categories/tree
- * @access  Public
- */
-const getCategoryTree = async (req, res) => {
-    try {
-        const tree = await Category.getCategoryTree();
-        ResponseHelper.success(res, tree, 'Lấy cây danh mục thành công');
-    } catch (error) {
-        console.error('Error in getCategoryTree:', error);
-        ResponseHelper.serverError(res, 'Lỗi khi lấy cây danh mục');
-    }
-};
+// (ĐÃ GỠ: getCategoryTree)
 
 /**
  * @desc    Lấy danh mục theo ID
@@ -330,143 +317,16 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-/**
- * @desc    Lấy danh sách subcategories
- * @route   GET /api/products/categories/:id/subcategories
- * @access  Public
- */
-const getSubcategories = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { page = 1, limit = 20, isActive = true } = req.query;
+// (ĐÃ GỠ: getSubcategories)
 
-        // Validate parent category exists
-        const parentCategory = await Category.findById(id);
-        if (!parentCategory) {
-            return ResponseHelper.notFound(res, 'Không tìm thấy danh mục cha');
-        }
+// (ĐÃ GỠ: reorderCategories)
 
-        // Build filter
-        let filter = { parentCategory: id };
-        if (isActive !== 'all') {
-            filter.isActive = isActive === 'true';
-        }
-
-        const queryHelper = new QueryHelper(Category.find(filter), req.query);
-        const subcategories = await queryHelper
-            .sort()
-            .paginate()
-            .query;
-
-        const total = await Category.countDocuments(filter);
-
-        ResponseHelper.successWithPagination(res, subcategories, {
-            currentPage: parseInt(page),
-            limit: parseInt(limit),
-            total,
-            parentCategory: {
-                id: parentCategory._id,
-                name: parentCategory.name,
-                slug: parentCategory.slug
-            }
-        }, 'Lấy danh sách danh mục con thành công');
-
-    } catch (error) {
-        console.error('Error in getSubcategories:', error);
-        ResponseHelper.serverError(res, 'Lỗi khi lấy danh sách danh mục con');
-    }
-};
-
-/**
- * @desc    Sắp xếp lại thứ tự danh mục
- * @route   PUT /api/products/categories/reorder
- * @access  Private (Admin only)
- */
-const reorderCategories = async (req, res) => {
-    try {
-        const { categoryOrders } = req.body; // Array of {id, sortOrder}
-
-        if (!Array.isArray(categoryOrders)) {
-            return ResponseHelper.error(res, 'categoryOrders phải là một mảng', 400);
-        }
-
-        // Validate tất cả category IDs tồn tại
-        const categoryIds = categoryOrders.map(item => item.id);
-        const existingCategories = await Category.find({ _id: { $in: categoryIds } });
-
-        if (existingCategories.length !== categoryIds.length) {
-            return ResponseHelper.error(res, 'Một số danh mục không tồn tại', 400);
-        }
-
-        // Bulk update sortOrder
-        const bulkOps = categoryOrders.map(item => ({
-            updateOne: {
-                filter: { _id: item.id },
-                update: { sortOrder: item.sortOrder }
-            }
-        }));
-
-        await Category.bulkWrite(bulkOps);
-
-        // Return updated categories
-        const updatedCategories = await Category.find({ _id: { $in: categoryIds } })
-            .sort({ sortOrder: 1 })
-            .populate('parentCategory', 'name slug');
-
-        ResponseHelper.success(res, updatedCategories, 'Sắp xếp danh mục thành công');
-
-    } catch (error) {
-        console.error('Error in reorderCategories:', error);
-        ResponseHelper.serverError(res, 'Lỗi khi sắp xếp danh mục');
-    }
-};
-
-/**
- * @desc    Bật/tắt trạng thái danh mục
- * @route   PUT /api/products/categories/:id/toggle-status
- * @access  Private (Admin only)
- */
-const toggleCategoryStatus = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const category = await Category.findById(id);
-        if (!category) {
-            return ResponseHelper.notFound(res, 'Không tìm thấy danh mục');
-        }
-
-        // Toggle status
-        category.isActive = !category.isActive;
-        await category.save();
-
-        // Nếu disable danh mục cha, cũng disable tất cả danh mục con
-        if (!category.isActive) {
-            await Category.updateMany(
-                { path: id },
-                { isActive: false }
-            );
-        }
-
-        await category.populate('parentCategory', 'name slug');
-
-        ResponseHelper.success(res, category,
-            `${category.isActive ? 'Kích hoạt' : 'Vô hiệu hóa'} danh mục thành công`
-        );
-
-    } catch (error) {
-        console.error('Error in toggleCategoryStatus:', error);
-        ResponseHelper.serverError(res, 'Lỗi khi thay đổi trạng thái danh mục');
-    }
-};
+// (ĐÃ GỠ: toggleCategoryStatus)
 
 module.exports = {
     getAllCategories,
-    getCategoryTree,
     getCategoryById,
     createCategory,
     updateCategory,
-    deleteCategory,
-    getSubcategories,
-    reorderCategories,
-    toggleCategoryStatus
+    deleteCategory
 };

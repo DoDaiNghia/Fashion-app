@@ -27,7 +27,7 @@ router.get('/health', (req, res) => {
 });
 
 // ==========================================
-// CATEGORY MANAGEMENT ROUTES (TASK 7 - NN)
+// CATEGORY MANAGEMENT ROUTES (BASIC)
 // ==========================================
 
 // @route   GET /api/products/categories
@@ -38,7 +38,7 @@ router.get('/categories', productController.getAllCategories);
 // @route   GET /api/products/categories/tree
 // @desc    Lấy cây danh mục
 // @access  Public  
-router.get('/categories/tree', productController.getCategoryTree);
+// (đã gỡ tính năng nâng cao: tree)
 
 // @route   GET /api/products/categories/:id
 // @desc    Lấy danh mục theo ID
@@ -48,7 +48,7 @@ router.get('/categories/:id', productController.getCategoryById);
 // @route   GET /api/products/categories/:id/subcategories
 // @desc    Lấy danh mục con
 // @access  Public
-router.get('/categories/:id/subcategories', productController.getSubcategories);
+// (đã gỡ tính năng nâng cao: subcategories)
 
 // @route   POST /api/products/categories
 // @desc    Tạo danh mục mới
@@ -84,23 +84,15 @@ router.delete('/categories/:id',
 // @route   PUT /api/products/categories/reorder
 // @desc    Sắp xếp lại thứ tự danh mục
 // @access  Private (Admin only)
-router.put('/categories/reorder',
-    auth,
-    adminAuth,
-    productController.reorderCategories
-);
+// (đã gỡ tính năng nâng cao: reorder)
 
 // @route   PUT /api/products/categories/:id/toggle-status
 // @desc    Bật/tắt trạng thái danh mục
 // @access  Private (Admin only)
-router.put('/categories/:id/toggle-status',
-    auth,
-    adminAuth,
-    productController.toggleCategoryStatus
-);
+// (đã gỡ tính năng nâng cao: toggle-status)
 
 // ==========================================
-// SEARCH & FILTER ROUTES (TASK 10 - PT)
+// SEARCH (BASIC)
 // ==========================================
 
 // @route   GET /api/products/search
@@ -111,64 +103,56 @@ router.get('/search', productController.searchProducts);
 // @route   POST /api/products/filter
 // @desc    Lọc sản phẩm nâng cao
 // @access  Public
-router.post('/filter', productController.filterProducts);
+// (đã gỡ: filter nâng cao)
 
 // @route   GET /api/products/search/suggestions
 // @desc    Gợi ý tìm kiếm
 // @access  Public
-router.get('/search/suggestions', productController.getSearchSuggestions);
+// (đã gỡ: gợi ý tìm kiếm)
 
 // @route   GET /api/products/trending
 // @desc    Sản phẩm trending
 // @access  Public
-router.get('/trending', productController.getTrendingProducts);
+// (đã gỡ: trending)
 
 // @route   POST /api/products/search/track
 // @desc    Tracking tìm kiếm
 // @access  Public
-router.post('/search/track', productController.trackSearchQuery);
+// (đã gỡ: tracking)
 
 // @route   POST /api/products/faceted-search
 // @desc    Faceted search
 // @access  Public
-router.post('/faceted-search', productController.getFacetedSearchResults);
+// (đã gỡ: faceted search)
 
 // @route   GET /api/products/search/analytics
 // @desc    Analytics tìm kiếm
 // @access  Private (Admin only)
-router.get('/search/analytics',
-    auth,
-    adminAuth,
-    productController.getSearchAnalytics
-);
+// (đã gỡ: analytics)
 
 // @route   POST /api/products/search/export
 // @desc    Export kết quả tìm kiếm
 // @access  Private (Admin only)
-router.post('/search/export',
-    auth,
-    adminAuth,
-    productController.exportSearchResults
-);
+// (đã gỡ: export)
 
 // ==========================================
-// PRODUCT MANAGEMENT ROUTES (TASK 8 - SD)
+// PRODUCT MANAGEMENT ROUTES (BASIC)
 // ==========================================
 
 // @route   GET /api/products/featured
 // @desc    Lấy sản phẩm nổi bật
 // @access  Public
-router.get('/featured', productController.getFeaturedProducts);
+// (đã gỡ: featured)
 
 // @route   GET /api/products/category/:categoryId
 // @desc    Lấy sản phẩm theo danh mục
 // @access  Public
-router.get('/category/:categoryId', productController.getProductsByCategory);
+// (đã gỡ: theo danh mục nâng cao)
 
 // @route   GET /api/products/:id/similar
 // @desc    Lấy sản phẩm tương tự
 // @access  Public
-router.get('/:id/similar', productController.getSimilarProducts);
+// (đã gỡ: tương tự nâng cao)
 
 // @route   GET /api/products
 // @desc    Lấy tất cả sản phẩm
@@ -230,23 +214,15 @@ router.put('/:id/toggle-status',
 // @route   PUT /api/products/:id/toggle-featured
 // @desc    Đặt/bỏ sản phẩm nổi bật
 // @access  Private (Admin only)
-router.put('/:id/toggle-featured',
-    auth,
-    adminAuth,
-    productController.toggleFeaturedStatus
-);
+// (đã gỡ: toggle-featured)
 
 // @route   POST /api/products/:id/duplicate
 // @desc    Nhân bản sản phẩm
 // @access  Private (Admin only)
-router.post('/:id/duplicate',
-    auth,
-    adminAuth,
-    productController.duplicateProduct
-);
+// (đã gỡ: duplicate)
 
 // ==========================================
-// IMAGE MANAGEMENT ROUTES (TASK 9 - LC)
+// IMAGE MANAGEMENT ROUTES (BASIC)
 // ==========================================
 
 // @route   GET /api/products/:id/images
@@ -285,46 +261,26 @@ router.delete('/:id/images/:imageId',
 // @route   PUT /api/products/:id/images/reorder
 // @desc    Sắp xếp lại thứ tự ảnh
 // @access  Private (Admin only)
-router.put('/:id/images/reorder',
-    auth,
-    adminAuth,
-    productController.reorderProductImages
-);
+// (đã gỡ: reorder ảnh)
 
 // @route   PUT /api/products/:id/images/:imageId/set-main
 // @desc    Đặt ảnh chính
 // @access  Private (Admin only)
-router.put('/:id/images/:imageId/set-main',
-    auth,
-    adminAuth,
-    productController.setMainImage
-);
+// (đã gỡ: đặt ảnh chính)
 
 // @route   POST /api/products/:id/images/:imageId/generate-responsive
 // @desc    Tạo responsive images
 // @access  Private (Admin only)
-router.post('/:id/images/:imageId/generate-responsive',
-    auth,
-    adminAuth,
-    productController.generateResponsiveImages
-);
+// (đã gỡ: responsive images)
 
 // @route   POST /api/products/:id/images/bulk-upload
 // @desc    Upload ảnh từ URLs
 // @access  Private (Admin only)
-router.post('/:id/images/bulk-upload',
-    auth,
-    adminAuth,
-    productController.bulkUploadFromUrls
-);
+// (đã gỡ: bulk-upload)
 
 // @route   POST /api/products/:id/images/optimize
 // @desc    Optimize tất cả ảnh
 // @access  Private (Admin only)
-router.post('/:id/images/optimize',
-    auth,
-    adminAuth,
-    productController.optimizeAllImages
-);
+// (đã gỡ: optimize tất cả ảnh)
 
 module.exports = router;

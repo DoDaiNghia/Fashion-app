@@ -13,6 +13,8 @@ const rateLimit = require('express-rate-limit');
 const authRoutes = require('./src/routes/authRoutes');
 const productRoutes = require('./src/routes/productRoutes');
 const errorHandler = require('./src/middleware/errorHandler');
+const cartRoutes = require('./src/routes/cartRoutes');
+const orderRoutes = require('./src/routes/orderRoutes');
 
 // ====== Kiểm tra biến môi trường ======
 const PORT = Number(process.env.PORT) || 5000;
@@ -56,6 +58,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Test endpoints
 app.get('/', (_req, res) => res.send('OK'));
