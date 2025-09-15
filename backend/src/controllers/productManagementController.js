@@ -428,25 +428,188 @@ const toggleProductStatus = async (req, res) => {
 };
 
 /**
+<<<<<<< HEAD
+=======
+ * @desc    Bật/tắt trạng thái featured của sản phẩm
+ * @route   PUT /api/products/:id/toggle-featured
+ * @access  Private (Admin only)
+ */
+const toggleFeaturedStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const product = await Product.findById(id);
+        if (!product) {
+            return ResponseHelper.notFound(res, 'Không tìm thấy sản phẩm');
+        }
+
+        product.isFeatured = !product.isFeatured;
+        await product.save();
+
+        ResponseHelper.success(res, {
+            id: product._id,
+            name: product.name,
+            sku: product.sku,
+            isFeatured: product.isFeatured
+        }, `${product.isFeatured ? 'Đặt' : 'Bỏ'} sản phẩm nổi bật thành công`);
+
+    } catch (error) {
+        console.error('Error in toggleFeaturedStatus:', error);
+        ResponseHelper.serverError(res, 'Lỗi khi thay đổi trạng thái nổi bật');
+    }
+};
+
+/**
+>>>>>>> 0fa37a6882be3307077f27c6d979957742634d9f
  * @desc    Lấy sản phẩm nổi bật
  * @route   GET /api/products/featured
  * @access  Public
  */
+<<<<<<< HEAD
 // (ĐÃ GỠ: getFeaturedProducts)
+=======
+const getFeaturedProducts = async (req, res) => {
+    try {
+        const { limit = 10, category } = req.query;
+
+        let filter = {
+            isFeatured: true,
+            isActive: true
+        };
+
+        if (category) {
+            filter.category = category;
+        }
+
+        const products = await Product.find(filter)
+            .limit(parseInt(limit))
+            .sort({ createdAt: -1 })
+            .populate('category', 'name slug')
+            .populate('subcategory', 'name slug');
+
+        ResponseHelper.success(res, products, 'Lấy sản phẩm nổi bật thành công');
+
+    } catch (error) {
+        console.error('Error in getFeaturedProducts:', error);
+        ResponseHelper.serverError(res, 'Lỗi khi lấy sản phẩm nổi bật');
+    }
+};
+>>>>>>> 0fa37a6882be3307077f27c6d979957742634d9f
 
 /**
  * @desc    Lấy sản phẩm theo danh mục
  * @route   GET /api/products/category/:categoryId
  * @access  Public
  */
+<<<<<<< HEAD
 // (ĐÃ GỠ: getProductsByCategory)
+=======
+const getProductsByCategory = async (req, res) => {
+    try {
+        const { categoryId } = req.params;
+        const { page = 1, limit = 20, includeSubcategories = true } = req.query;
+
+        // Validate category exists
+        const category = await Category.findById(categoryId);
+        if (!category) {
+            return ResponseHelper.notFound(res, 'Không tìm thấy danh mục');
+        }
+
+        let filter = { isActive: true };
+
+        if (includeSubcategories === 'true') {
+            // Include all subcategories
+            const allCategories = await Category.getAllSubcategories(categoryId);
+            const categoryIds = allCategories.map(cat => cat._id);
+            filter.$or = [
+                { category: { $in: categoryIds } },
+                { subcategory: { $in: categoryIds } }
+            ];
+        } else {
+            filter.category = categoryId;
+        }
+
+        const queryHelper = new QueryHelper(Product.find(filter), req.query);
+        const products = await queryHelper
+            .sort()
+            .paginate()
+            .populate('category', 'name slug')
+            .populate('subcategory', 'name slug')
+            .query;
+
+        const total = await Product.countDocuments(filter);
+
+        ResponseHelper.successWithPagination(res, products, {
+            currentPage: parseInt(page),
+            limit: parseInt(limit),
+            total,
+            category: {
+                id: category._id,
+                name: category.name,
+                slug: category.slug
+            }
+        }, 'Lấy sản phẩm theo danh mục thành công');
+
+    } catch (error) {
+        console.error('Error in getProductsByCategory:', error);
+        ResponseHelper.serverError(res, 'Lỗi khi lấy sản phẩm theo danh mục');
+    }
+};
+>>>>>>> 0fa37a6882be3307077f27c6d979957742634d9f
 
 /**
  * @desc    Nhân bản sản phẩm
  * @route   POST /api/products/:id/duplicate
  * @access  Private (Admin only)
  */
+<<<<<<< HEAD
 // (ĐÃ GỠ: duplicateProduct)
+=======
+const duplicateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const originalProduct = await Product.findById(id);
+        if (!originalProduct) {
+            return ResponseHelper.notFound(res, 'Không tìm thấy sản phẩm gốc');
+        }
+
+        // Create duplicate data
+        const duplicateData = originalProduct.toObject();
+        delete duplicateData._id;
+        delete duplicateData.__v;
+        delete duplicateData.createdAt;
+        delete duplicateData.updatedAt;
+
+        // Modify fields for duplicate
+        duplicateData.name = `${duplicateData.name} (Copy)`;
+        duplicateData.slug = undefined; // Will be auto-generated
+        duplicateData.sku = undefined; // Will be auto-generated
+        duplicateData.stock.quantity = 0; // Reset stock
+        duplicateData.views = 0;
+        duplicateData.sales = 0;
+        duplicateData.rating = { average: 0, count: 0, reviews: [] };
+        duplicateData.isFeatured = false;
+        duplicateData.createdBy = req.user.id;
+
+        // Create new product
+        const duplicatedProduct = new Product(duplicateData);
+        await duplicatedProduct.save();
+
+        await duplicatedProduct.populate([
+            { path: 'category', select: 'name slug' },
+            { path: 'subcategory', select: 'name slug' },
+            { path: 'createdBy', select: 'username firstName lastName' }
+        ]);
+
+        ResponseHelper.created(res, duplicatedProduct, 'Nhân bản sản phẩm thành công');
+
+    } catch (error) {
+        console.error('Error in duplicateProduct:', error);
+        ResponseHelper.serverError(res, 'Lỗi khi nhân bản sản phẩm');
+    }
+};
+>>>>>>> 0fa37a6882be3307077f27c6d979957742634d9f
 
 module.exports = {
     getAllProducts,
@@ -455,5 +618,13 @@ module.exports = {
     updateProduct,
     deleteProduct,
     updateProductStock,
+<<<<<<< HEAD
     toggleProductStatus
+=======
+    toggleProductStatus,
+    toggleFeaturedStatus,
+    getFeaturedProducts,
+    getProductsByCategory,
+    duplicateProduct
+>>>>>>> 0fa37a6882be3307077f27c6d979957742634d9f
 };
